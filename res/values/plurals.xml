@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="sms">
+        <item quantity="zero">%1$d SMSs</item>
+        <item quantity="one">%1$d SMS</item>
+        <item quantity="other">%1$d SMSs</item>
+    </plurals>
+    <plurals name="mms">
+        <item quantity="zero">%1$d MMSs</item>
+        <item quantity="one">%1$d MMS</item>
+        <item quantity="other">%1$d MMSs</item>
+    </plurals>
+    
+</resources>
