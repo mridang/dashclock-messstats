@@ -20,7 +20,7 @@ public class MessstatsWidget extends DashClockExtension {
 
 		super.onCreate();
 		Log.d("MessstatsWidget", "Created");
-		BugSenseHandler.initAndStartSession(this, "a83e054b");
+		BugSenseHandler.initAndStartSession(this, "bc2d4ec1");
 
 	}
 
@@ -45,7 +45,7 @@ public class MessstatsWidget extends DashClockExtension {
 			Integer intRecdSms = 0;
 			Integer intTotalSms = 0;
 
-			while (curSmses.moveToNext()) {
+			while (curSmses != null && curSmses.moveToNext()) {
 
 				intTotalSms = intTotalSms + 1;
 
@@ -78,7 +78,7 @@ public class MessstatsWidget extends DashClockExtension {
 			Integer intRecdMms = 0;
 			Integer intTotalMms = 0;
 
-			while (curMmses.moveToNext()) {
+			while (curMmses != null && curMmses.moveToNext()) {
 
 				intTotalMms = intTotalMms + 1;
 
