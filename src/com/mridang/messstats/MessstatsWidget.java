@@ -14,6 +14,19 @@ import com.google.android.apps.dashclock.api.ExtensionData;
 public class MessstatsWidget extends DashClockExtension {
 
 	/*
+	 * @see com.google.android.apps.dashclock.api.DashClockExtension#onInitialize(boolean)
+	 */
+    @Override
+    protected void onInitialize(boolean isReconnect) {
+
+    	super.onInitialize(isReconnect);
+        if (!isReconnect) {
+            addWatchContentUris(new String[]{"content://sms/"});
+        }
+
+    }
+
+	/*
 	 * @see com.google.android.apps.dashclock.api.DashClockExtension#onCreate()
 	 */
 	public void onCreate() {
