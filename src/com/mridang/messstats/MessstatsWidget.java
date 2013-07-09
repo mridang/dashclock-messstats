@@ -16,15 +16,16 @@ public class MessstatsWidget extends DashClockExtension {
 	/*
 	 * @see com.google.android.apps.dashclock.api.DashClockExtension#onInitialize(boolean)
 	 */
-    @Override
-    protected void onInitialize(boolean isReconnect) {
+	@Override
+	protected void onInitialize(boolean isReconnect) {
 
-    	super.onInitialize(isReconnect);
-        if (!isReconnect) {
-            addWatchContentUris(new String[]{"content://sms/"});
-        }
+		super.onInitialize(isReconnect);
+		if (!isReconnect) {
+			addWatchContentUris(new String[]{"content://sms/"});
+			addWatchContentUris(new String[]{"content://mms/"});
+		}
 
-    }
+	}
 
 	/*
 	 * @see com.google.android.apps.dashclock.api.DashClockExtension#onCreate()
@@ -56,11 +57,8 @@ public class MessstatsWidget extends DashClockExtension {
 
 			Integer intSentSms = 0;
 			Integer intRecdSms = 0;
-			Integer intTotalSms = 0;
 
 			while (curSmses != null && curSmses.moveToNext()) {
-
-				intTotalSms = intTotalSms + 1;
 
 				switch (curSmses.getInt(curSmses.getColumnIndex("type"))) {
 
@@ -75,25 +73,18 @@ public class MessstatsWidget extends DashClockExtension {
 				}
 
 			}
-			
-			String strSentSms = getResources().getQuantityString(R.plurals.sms, intSentSms, intSentSms);
-			String strRecdSms = getResources().getQuantityString(R.plurals.sms, intRecdSms, intRecdSms);
-			String strTotalSms = getResources().getQuantityString(R.plurals.sms, intTotalSms, intTotalSms);
 
 			Log.d("MessstatsWidget", "Send SMSes: " + intSentSms);
 			Log.d("MessstatsWidget", "Received SMSs: " + intRecdSms);
-			Log.d("MessstatsWidget", "Total SMSes: " + intTotalSms);
+			Log.d("MessstatsWidget", "Total SMSes: " + intSentSms + intRecdSms);
 
 			Log.d("MessstatsWidget", "Calculating MMS statistics");
 			Cursor curMmses = getContentResolver().query(Uri.parse("content://mms/"), null, null, null, null);
 
 			Integer intSentMms = 0;
 			Integer intRecdMms = 0;
-			Integer intTotalMms = 0;
 
 			while (curMmses != null && curMmses.moveToNext()) {
-
-				intTotalMms = intTotalMms + 1;
 
 				switch (curMmses.getInt(curMmses.getColumnIndex("msg_box"))) {
 
@@ -108,46 +99,41 @@ public class MessstatsWidget extends DashClockExtension {
 				}
 
 			}
-			
-			String strSentMms = getResources().getQuantityString(R.plurals.mms, intSentMms, intSentMms);
-			String strRecdMms = getResources().getQuantityString(R.plurals.mms, intRecdMms, intRecdMms);
-			String strTotalMms = getResources().getQuantityString(R.plurals.mms, intTotalMms, intTotalMms);
-			
+
 			Log.d("MessstatsWidget", "Send MMSes: " + intSentMms);
 			Log.d("MessstatsWidget", "Received MMSes: " + intRecdMms);
-			Log.d("MessstatsWidget", "Total MMSes: " + intTotalMms);
-
-			edtInformation
-					.expandedBody((edtInformation.expandedBody() == null ? ""
-							: edtInformation.expandedBody() + "\n")
-							+ String.format(getString(R.string.sent), String
-									.format(getString(R.string.and),
-											strSentSms, strSentMms)));
-
-			edtInformation.status(String.format(getString(R.string.messages),
-					String.format(getString(R.string.and), strTotalSms,
-							strTotalMms)));
+			Log.d("MessstatsWidget", "Total MMSes: " + intSentMms + intRecdMms);
 
 			edtInformation
 			.expandedBody((edtInformation.expandedBody() == null ? ""
 					: edtInformation.expandedBody() + "\n")
-					+ String.format(getString(R.string.recd), String
-							.format(getString(R.string.and),
-									strRecdSms, strRecdMms)));
-			
+					+ getResources().getQuantityString(R.plurals.sent,
+							intSentSms + intSentMms,
+							intSentSms + intSentMms));
+
+			edtInformation.status(String.format(getString(R.string.messages),
+					intSentSms + intRecdSms + intSentMms + intRecdMms));
+
+			edtInformation
+			.expandedBody((edtInformation.expandedBody() == null ? ""
+					: edtInformation.expandedBody() + "\n")
+					+ getResources().getQuantityString(R.plurals.received,
+							intRecdSms + intRecdMms,
+							intRecdSms + intRecdMms));
+
 			edtInformation.visible(true);
 
 		} catch (Exception e) {
 			Log.e("MessstatsWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
 		}	
-		
+
 		edtInformation.icon(R.drawable.ic_dashclock);
 		publishUpdate(edtInformation);
 		Log.d("MessstatsWidget", "Done");
 
 	}
-	
+
 	/*
 	 * @see com.google.android.apps.dashclock.api.DashClockExtension#onDestroy()
 	 */

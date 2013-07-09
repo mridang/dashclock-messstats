@@ -1,11 +1,8 @@
 <resources>
 
-    <string name="sent">Sent: %1$s</string>
     <string name="extension_name">Message Statistics</string>
     <string name="messages">Messages — %1$s</string>
-	<string name="and">%1$s and %2$s</string>
     <string name="application_name">Dashclock Message Statistics Extension</string>
     <string name="extension_info">Displays information about your message statistics.</string>
-    <string name="recd">Received: %1$s</string>
 
 </resources>
