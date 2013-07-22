@@ -1,7 +1,10 @@
 package com.mridang.messstats;
 
+import java.util.Calendar;
+
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -20,9 +23,12 @@ public class MessstatsWidget extends DashClockExtension {
 	protected void onInitialize(boolean isReconnect) {
 
 		super.onInitialize(isReconnect);
+
 		if (!isReconnect) {
+
 			addWatchContentUris(new String[]{"content://sms/"});
 			addWatchContentUris(new String[]{"content://mms/"});
+
 		}
 
 	}
@@ -52,8 +58,49 @@ public class MessstatsWidget extends DashClockExtension {
 
 		try {
 
+			Log.d("MessstatsWidget", "Checking period that user has selected");
+			Calendar calCalendar = Calendar.getInstance();
+			calCalendar.set(Calendar.MINUTE, 0);
+			calCalendar.set(Calendar.HOUR, 0);
+			calCalendar.set(Calendar.SECOND, 0);
+			calCalendar.set(Calendar.MILLISECOND, 0);
+			calCalendar.set(Calendar.HOUR_OF_DAY, 0);
+
+			switch (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("period", "4"))) {
+			
+			case 0: //Day
+				Log.d("MessstatsWidget", "Fetch messages for the day");
+				calCalendar.set(Calendar.HOUR_OF_DAY, 0);
+				break;
+			
+			case 1: //Week
+				Log.d("MessstatsWidget", "Fetch messages for the week");
+				calCalendar.set(Calendar.DAY_OF_WEEK, calCalendar.getFirstDayOfWeek());
+				break;
+			
+			case 2: //Month
+				Log.d("MessstatsWidget", "Fetch messages for the month");
+				calCalendar.set(Calendar.DAY_OF_MONTH, 1);
+				break;
+
+			case 3: //Year
+				Log.d("MessstatsWidget", "Fetch messages for the year");
+				calCalendar.set(Calendar.DAY_OF_YEAR, 1);
+				break;
+				
+			default:
+				Log.d("MessstatsWidget", "Fetch all messages");
+				calCalendar.clear(); 
+				break;
+
+			}
+
+			Log.d("MessstatsWidget", "Querying the database to get the messages since " + calCalendar.getTime());
+			String strClause = "date >= ?";
+			String[] strValues = {String.valueOf(calCalendar.getTimeInMillis())};
+			
 			Log.d("MessstatsWidget", "Calculating SMS statistics");
-			Cursor curSmses = getContentResolver().query(Uri.parse("content://sms/"), null, null, null, null);
+			Cursor curSmses = getContentResolver().query(Uri.parse("content://sms/"), null, strClause, strValues, null);
 
 			Integer intSentSms = 0;
 			Integer intRecdSms = 0;
@@ -76,10 +123,10 @@ public class MessstatsWidget extends DashClockExtension {
 
 			Log.d("MessstatsWidget", "Send SMSes: " + intSentSms);
 			Log.d("MessstatsWidget", "Received SMSs: " + intRecdSms);
-			Log.d("MessstatsWidget", "Total SMSes: " + intSentSms + intRecdSms);
+			Log.d("MessstatsWidget", "Total SMSes: " + (intSentSms + intRecdSms));
 
 			Log.d("MessstatsWidget", "Calculating MMS statistics");
-			Cursor curMmses = getContentResolver().query(Uri.parse("content://mms/"), null, null, null, null);
+			Cursor curMmses = getContentResolver().query(Uri.parse("content://mms/"), null, strClause, strValues, null);
 
 			Integer intSentMms = 0;
 			Integer intRecdMms = 0;
@@ -102,7 +149,7 @@ public class MessstatsWidget extends DashClockExtension {
 
 			Log.d("MessstatsWidget", "Send MMSes: " + intSentMms);
 			Log.d("MessstatsWidget", "Received MMSes: " + intRecdMms);
-			Log.d("MessstatsWidget", "Total MMSes: " + intSentMms + intRecdMms);
+			Log.d("MessstatsWidget", "Total MMSes: " + (intSentMms + intRecdMms));
 
 			edtInformation
 			.expandedBody((edtInformation.expandedBody() == null ? ""
