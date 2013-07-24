@@ -1,7 +1,12 @@
 package com.mridang.messstats;
 
 import java.util.Calendar;
+import java.util.Random;
 
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -170,6 +175,37 @@ public class MessstatsWidget extends DashClockExtension {
 
 			edtInformation.visible(true);
 
+			if (new Random().nextInt(5) == 0) {
+				
+				PackageManager mgrPackages = getApplicationContext().getPackageManager();
+
+				try {
+
+					mgrPackages.getPackageInfo("com.mridang.donate", PackageManager.GET_META_DATA);
+
+				} catch (NameNotFoundException e) {
+
+					Integer intExtensions = 0;
+
+					for (PackageInfo pkgPackage : mgrPackages.getInstalledPackages(0)) {
+						
+						intExtensions = intExtensions + (pkgPackage.applicationInfo.packageName.startsWith("com.mridang.") ? 1 : 0); 
+
+					}
+
+					if (intExtensions > 1) {
+
+						edtInformation.visible(true);
+						edtInformation.clickIntent(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("market://details?id=com.mridang.donate")));
+						edtInformation.expandedTitle("Please consider a one time purchase to unlock.");
+						edtInformation.expandedBody("Thank you for using " + intExtensions + " extensions of mine. Click this to make a one-time purchase or use just one extension to make this disappear.");
+
+					}
+
+				}
+
+			}
+			
 		} catch (Exception e) {
 			Log.e("MessstatsWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
