@@ -72,17 +72,17 @@ public class MessstatsWidget extends DashClockExtension {
 			calCalendar.set(Calendar.HOUR_OF_DAY, 0);
 
 			switch (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("period", "4"))) {
-			
+
 			case 0: //Day
 				Log.d("MessstatsWidget", "Fetch messages for the day");
 				calCalendar.set(Calendar.HOUR_OF_DAY, 0);
 				break;
-			
+
 			case 1: //Week
 				Log.d("MessstatsWidget", "Fetch messages for the week");
 				calCalendar.set(Calendar.DAY_OF_WEEK, calCalendar.getFirstDayOfWeek());
 				break;
-			
+
 			case 2: //Month
 				Log.d("MessstatsWidget", "Fetch messages for the month");
 				calCalendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -92,7 +92,7 @@ public class MessstatsWidget extends DashClockExtension {
 				Log.d("MessstatsWidget", "Fetch messages for the year");
 				calCalendar.set(Calendar.DAY_OF_YEAR, 1);
 				break;
-				
+
 			default:
 				Log.d("MessstatsWidget", "Fetch all messages");
 				calCalendar.clear(); 
@@ -103,7 +103,7 @@ public class MessstatsWidget extends DashClockExtension {
 			Log.d("MessstatsWidget", "Querying the database to get the messages since " + calCalendar.getTime());
 			String strClause = "date >= ?";
 			String[] strValues = {String.valueOf(calCalendar.getTimeInMillis())};
-			
+
 			Log.d("MessstatsWidget", "Calculating SMS statistics");
 			Cursor curSmses = getContentResolver().query(Uri.parse("content://sms/"), null, strClause, strValues, null);
 
@@ -176,7 +176,7 @@ public class MessstatsWidget extends DashClockExtension {
 			edtInformation.visible(true);
 
 			if (new Random().nextInt(5) == 0) {
-				
+
 				PackageManager mgrPackages = getApplicationContext().getPackageManager();
 
 				try {
@@ -188,7 +188,7 @@ public class MessstatsWidget extends DashClockExtension {
 					Integer intExtensions = 0;
 
 					for (PackageInfo pkgPackage : mgrPackages.getInstalledPackages(0)) {
-						
+
 						intExtensions = intExtensions + (pkgPackage.applicationInfo.packageName.startsWith("com.mridang.") ? 1 : 0); 
 
 					}
@@ -199,13 +199,16 @@ public class MessstatsWidget extends DashClockExtension {
 						edtInformation.clickIntent(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("market://details?id=com.mridang.donate")));
 						edtInformation.expandedTitle("Please consider a one time purchase to unlock.");
 						edtInformation.expandedBody("Thank you for using " + intExtensions + " extensions of mine. Click this to make a one-time purchase or use just one extension to make this disappear.");
+						setUpdateWhenScreenOn(true);
 
 					}
 
 				}
 
+			} else {
+				setUpdateWhenScreenOn(false);
 			}
-			
+
 		} catch (Exception e) {
 			Log.e("MessstatsWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
