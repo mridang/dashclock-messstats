@@ -31,8 +31,7 @@ public class MessstatsWidget extends DashClockExtension {
 
 		if (!isReconnect) {
 
-			addWatchContentUris(new String[]{"content://sms/"});
-			addWatchContentUris(new String[]{"content://mms/"});
+			addWatchContentUris(new String[]{"content://sms/", "content://mms/"});
 
 		}
 
@@ -55,11 +54,11 @@ public class MessstatsWidget extends DashClockExtension {
 	 * (int)
 	 */
 	@Override
-	protected void onUpdateData(int arg0) {
+	protected void onUpdateData(int intReason) {
 
 		Log.d("MessstatsWidget", "Calculating message statistics");
 		ExtensionData edtInformation = new ExtensionData();
-		edtInformation.visible(false);
+		setUpdateWhenScreenOn(false);
 
 		try {
 
@@ -210,6 +209,7 @@ public class MessstatsWidget extends DashClockExtension {
 			}
 
 		} catch (Exception e) {
+			edtInformation.visible(false);
 			Log.e("MessstatsWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
 		}	
