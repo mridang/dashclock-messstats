@@ -3,7 +3,7 @@
     <string name="extension_name">Message Statistics</string>
 	<string name="preferences_title">Message Statistics Extension Settings</string>
 	<string name="period">Period</string>
-    <string name="messages">Messages — %1$s</string>
+    <string name="messages">%1$s messages</string>
     <string name="application_name">Dashclock Message Statistics Extension</string>
     <string name="extension_info">Displays information about your message statistics.</string>
 
