@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 /*
  * This class is the activity which contains the preferences
  */
-@SuppressWarnings("deprecation")
 public class WidgetSettings extends PreferenceActivity {
 
 	/*
@@ -31,13 +30,10 @@ public class WidgetSettings extends PreferenceActivity {
 	private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
 
 		@Override
-		public boolean onPreferenceChange(Preference prePreference,
-				Object objValue) {
+		public boolean onPreferenceChange(Preference prePreference, Object objValue) {
 
-			Integer intIndex = ((ListPreference) prePreference)
-					.findIndexOfValue(objValue.toString());
-			prePreference.setSummary(((ListPreference) prePreference)
-					.getEntries()[intIndex]);
+			Integer intIndex = ((ListPreference) prePreference).findIndexOfValue(objValue.toString());
+			prePreference.setSummary(((ListPreference) prePreference).getEntries()[intIndex]);
 			return true;
 
 		}
@@ -51,14 +47,10 @@ public class WidgetSettings extends PreferenceActivity {
 	 */
 	private static void bindPreferenceSummaryToValue(Preference prePreference) {
 
-		prePreference
-				.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+		prePreference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-		sBindPreferenceSummaryToValueListener.onPreferenceChange(
-				prePreference,
-				PreferenceManager.getDefaultSharedPreferences(
-						prePreference.getContext()).getString(
-						prePreference.getKey(), ""));
+		sBindPreferenceSummaryToValueListener.onPreferenceChange(prePreference, PreferenceManager
+				.getDefaultSharedPreferences(prePreference.getContext()).getString(prePreference.getKey(), ""));
 
 	}
 
