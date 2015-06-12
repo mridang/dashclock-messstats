@@ -7,9 +7,9 @@
         <item quantity="other">%1$d messages sent</item>
     </plurals>
     <plurals name="received">
-        <item quantity="zero"> and no messages received</item>
-        <item quantity="one"> and %1$d message received</item>
-        <item quantity="other"> and %1$d messages received</item>
+        <item quantity="zero">" and no messages received"</item>
+        <item quantity="one">" and %1$d message received"</item>
+        <item quantity="other">" and %1$d messages received"</item>
     </plurals>
     
 </resources>

@@ -1,9 +1,5 @@
 package com.mridang.messstats;
 
-import java.util.Calendar;
-
-import org.acra.ACRA;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,6 +8,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.apps.dashclock.api.ExtensionData;
+
+import org.acra.ACRA;
+
+import java.util.Calendar;
 
 /*
  * This class is the main class that provides the widget
@@ -160,6 +160,9 @@ public class MessstatsWidget extends ImprovedExtension {
 			edtInformation.expandedTitle(edtInformation.expandedTitle() + getQuantityString(R.plurals.received, intRecd, intRecd));
 			edtInformation.expandedBody(getString(R.string.messages, intTotal));
 			edtInformation.status(intTotal.toString());
+			edtInformation.clickIntent(new Intent(Intent.ACTION_MAIN));
+			edtInformation.clickIntent().addCategory(Intent.CATEGORY_DEFAULT);
+			edtInformation.clickIntent().setType("vnd.android-dir/mms-sms");
 			edtInformation.visible(true);
 
 		} catch (Exception e) {
